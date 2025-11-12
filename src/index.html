@@ -1,137 +1,153 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Все вместе - Благотворительные фонды</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="scripts.js"></script>
-    <script src="./scripts.js" defer></script>
-</head>
-<body>
-    <div class="content-wrapper">
-        <!-- Верхняя полоска с навигацией -->
-        <header>
-            <nav>
-                <div class="logo">Все вместе ♥</div>
-                <ul class="nav-links">
-                    <li><button class="nav-link" data-page="help-map">Карта помощи</button></li>
-                    <li><button class="nav-link" data-page="funds">Фонды</button></li>
-                    <li><button class="nav-link active" data-page="about">О проекте</button></li>
-                </ul>
-            </nav>
-        </header>
+{% extends "base.html" %} <!-- Наследуемся от base.html -->
+
+{% block title %}Все вместе - Благотворительные фонды{% endblock %}
+
+{% block extrahead %}
+    <!-- Любые дополнительные теги в <head>, если нужно -->
+{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+    <!-- Верхняя полоска с навигацией -->
+    <header>
+        <nav>
+            <div class="logo">Все вместе ♥</div>
+            <ul class="nav-links">
+                <li><button class="nav-link" data-page="help-map">Карта помощи</button></li>
+                <li><button class="nav-link" data-page="funds">Фонды</button></li>
+                <li><button class="nav-link active" data-page="about">О проекте</button></li>
+            </ul>
+            <!-- НОВОЕ: Добавляем блок для авторизации -->
+            <div class="auth-links">
+                {% if user.is_authenticated %}
+                    <!-- Если пользователь авторизован -->
+                    <span>Привет, {{ user.username }}!</span>
+                    <a href="{% url 'logout' %}">Выйти</a>
+                    <!-- Можно добавить ссылку на профиль, если создашь -->
+                    <a href="{% url 'profile' %}">Профиль</a>
+                {% else %}
+                    <!-- Если не авторизован -->
+                    <a href="{% url 'login' %}">Войти</a> |
+                    <a href="{% url 'register' %}">Регистрация</a>
+                {% endif %}
+            </div>
+            <!-- /НОВОЕ -->
+        </nav>
+    </header>
+    
+    <main>
+        <!-- Секция "Карта помощи" -->
+        <section id="help-map-section" class="page-section">
+            <div class="map-title">
+                <div class="help-hero">
+                    <h1>Помогайте тем, кто рядом</h1>
+                    <p>Найдите людей в вашем районе, которым нужна помощь. Каждая заявка на карте — это реальный человек, который нуждается в поддержке.</p>
+                    <div class="help-actions">
+                        <button class="request-help-btn">Оставить заявку о помощи</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="map-container">
+                <div class="map-filters">
+                    <h3>Категории помощи</h3>
+                    <div class="filter-options">
+                        <button class="filter-btn active">Все</button>
+                        <button class="filter-btn">Еда</button>
+                        <button class="filter-btn">Одежда</button>
+                        <button class="filter-btn">Лекарства</button>
+                        <button class="filter-btn">Другое</button>
+                    </div>
+                </div>
+                
+                <div class="map-content">
+                    <div class="map-placeholder">
+                        <h2>Карта заявок</h2>
+                        <p>Здесь будет отображаться интерактивная карта с заявками о помощи</p>
+                        <p style="margin-top: 1rem; font-size: 0.9rem; color: #95a5a6;">(В реальном приложении здесь будет интеграция с картографическим сервисом)</p>
+                    </div>
+                </div>
+            </div>
+        </section>
         
-        <main>
-            <!-- Секция "Карта помощи" -->
-            <section id="help-map-section" class="page-section">
-                <div class="map-title">
-                    <div class="help-hero">
-                        <h1>Помогайте тем, кто рядом</h1>
-                        <p>Найдите людей в вашем районе, которым нужна помощь. Каждая заявка на карте — это реальный человек, который нуждается в поддержке.</p>
-                        <div class="help-actions">
-                            <button class="request-help-btn">Оставить заявку о помощи</button>
-                        </div>
-                    </div>
-                </div>
+        <!-- Секция "Фонды" -->
+        <section id="funds-section" class="page-section">
+            <div class="funds-title">
+                <section class="hero">
+                    <h1>Благотворительные фонды</h1>
+                    <p>Поддержите проверенные благотворительные организации и помогите реализовать их важные проекты.</p>
+                </section>
                 
-                <div class="map-container">
-                    <div class="map-filters">
-                        <h3>Категории помощи</h3>
-                        <div class="filter-options">
-                            <button class="filter-btn active">Все</button>
-                            <button class="filter-btn">Еда</button>
-                            <button class="filter-btn">Одежда</button>
-                            <button class="filter-btn">Лекарства</button>
-                            <button class="filter-btn">Другое</button>
-                        </div>
-                    </div>
-                    
-                    <div class="map-content">
-                        <div class="map-placeholder">
-                            <h2>Карта заявок</h2>
-                            <p>Здесь будет отображаться интерактивная карта с заявками о помощи</p>
-                            <p style="margin-top: 1rem; font-size: 0.9rem; color: #95a5a6;">(В реальном приложении здесь будет интеграция с картографическим сервисом)</p>
-                        </div>
-                    </div>
+                <div class="controls">
+                    <button class="add-fund-btn">Добавить сбор фонда</button>
                 </div>
-            </section>
-            
-            <!-- Секция "Фонды" -->
-            <section id="funds-section" class="page-section">
-                <div class="funds-title">
-                    <section class="hero">
-                        <h1>Благотворительные фонды</h1>
-                        <p>Поддержите проверенные благотворительные организации и помогите реализовать их важные проекты.</p>
-                    </section>
-                    
-                    <div class="controls">
-                        <button class="add-fund-btn">Добавить сбор фонда</button>
-                    </div>
-                </div>
+            </div>
 
-                <div class="loading-spinner" id="loadingSpinner">
-                    <div class="spinner"></div>
-                    <p>Загрузка данных с сервера...</p>
-                </div>
-                
-                <div class="error-message" id="errorMessage">
-                    <h3>Не удалось загрузить данные</h3>
-                    <p>Текст ошибки</p>
-                </div>
-                
-                <div class="success-message" id="successMessage">
-                    <h3>Данные успешно загружены</h3>
-                    <p>Найдено <span id="fundsCount">0</span> благотворительных фондов.</p>
-                </div>
-                
-                <div class="funds-grid" id="fundsGrid">
-                    <!-- Карточки фондов появляются динамически -->
-                </div>
-            </section>
+            <div class="loading-spinner" id="loadingSpinner">
+                <div class="spinner"></div>
+                <p>Загрузка данных с сервера...</p>
+            </div>
             
-            <!-- Секция "О проекте" -->
-            <section id="about-section" class="page-section active">
-                <div class="about-content">
-                    
-                    <div class="how-it-works">
-                        <h1>О проекте "Все вместе"</h1>
-                    
-                        <p>Мы создали платформу, которая объединяет тех, кто нуждается в помощи, и тех, кто готов помочь. Наша миссия — сделать благотворительность простой, прозрачной и доступной каждому.</p>
+            <div class="error-message" id="errorMessage">
+                <h3>Не удалось загрузить данные</h3>
+                <p>Текст ошибки</p>
+            </div>
+            
+            <div class="success-message" id="successMessage">
+                <h3>Данные успешно загружены</h3>
+                <p>Найдено <span id="fundsCount">0</span> благотворительных фондов.</p>
+            </div>
+            
+            <div class="funds-grid" id="fundsGrid">
+                <!-- Карточки фондов появляются динамически -->
+            </div>
+        </section>
+        
+        <!-- Секция "О проекте" -->
+        <section id="about-section" class="page-section active">
+            <div class="about-content">
+                
+                <div class="how-it-works">
+                    <h1>О проекте "Все вместе"</h1>
+                
+                    <p>Мы создали платформу, которая объединяет тех, кто нуждается в помощи, и тех, кто готов помочь. Наша миссия — сделать благотворительность простой, прозрачной и доступной каждому.</p>
 
-                        <h2>Как это работает?</h2>
+                    <h2>Как это работает?</h2>
+                    
+                    <div class="steps">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <h3>Оставьте заявку</h3>
+                            <p>Расскажите, в чем вы нуждаетесь или что можете предложить.</p>
+                        </div>
                         
-                        <div class="steps">
-                            <div class="step">
-                                <div class="step-number">1</div>
-                                <h3>Оставьте заявку</h3>
-                                <p>Расскажите, в чем вы нуждаетесь или что можете предложить.</p>
-                            </div>
-                            
-                            <div class="step">
-                                <div class="step-number">2</div>
-                                <h3>Найдите на карте</h3>
-                                <p>Увидьте заявки людей рядом с вами.</p>
-                            </div>
-                            
-                            <div class="step">
-                                <div class="step-number">3</div>
-                                <h3>Помогите</h3>
-                                <p>Свяжитесь с человеком и окажите поддержку.</p>
-                            </div>
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <h3>Найдите на карте</h3>
+                            <p>Увидьте заявки людей рядом с вами.</p>
                         </div>
-
-                    </div>    
-                    <div class="mission-statement">
-                        Вместе мы можем сделать мир лучше! <span class="logo">♥</span>
+                        
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <h3>Помогите</h3>
+                            <p>Свяжитесь с человеком и окажите поддержку.</p>
+                        </div>
                     </div>
+
+                </div>    
+                <div class="mission-statement">
+                    Вместе мы можем сделать мир лучше! <span class="logo">♥</span>
                 </div>
-            </section>
-        </main>
-        
-        <footer>
-            <p>© 2025 Все вместе. Все права защищены.</p>
-        </footer>
-    </div>
-</body>
-</html>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <p>© 2025 Все вместе. Все права защищены.</p>
+    </footer>
+</div>
+{% endblock %}
+
+{% block extrabody %}
+    <!-- Любые дополнительные скрипты в конец <body>, если нужно -->
+{% endblock %}
