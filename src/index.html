@@ -1,137 +1,90 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Все вместе - Благотворительные фонды</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="scripts.js"></script>
-    <script src="./scripts.js" defer></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Все вместе - Карта взаимопомощи</title>
+<link rel="stylesheet" href="styles.css">
+<!-- Добавьте тип загрузки как defer -->
+<script src="https://api-maps.yandex.ru/2.1/?apikey=f1b67a21-0ce5-4416-857a-838e9778a629&lang=ru_RU" type="text/javascript"></script>
 </head>
 <body>
-    <div class="content-wrapper">
-        <!-- Верхняя полоска с навигацией -->
-        <header>
-            <nav>
-                <div class="logo">Все вместе ♥</div>
-                <ul class="nav-links">
-                    <li><button class="nav-link" data-page="help-map">Карта помощи</button></li>
-                    <li><button class="nav-link" data-page="funds">Фонды</button></li>
-                    <li><button class="nav-link active" data-page="about">О проекте</button></li>
-                </ul>
-            </nav>
-        </header>
-        
-        <main>
-            <!-- Секция "Карта помощи" -->
-            <section id="help-map-section" class="page-section">
-                <div class="map-title">
-                    <div class="help-hero">
-                        <h1>Помогайте тем, кто рядом</h1>
-                        <p>Найдите людей в вашем районе, которым нужна помощь. Каждая заявка на карте — это реальный человек, который нуждается в поддержке.</p>
-                        <div class="help-actions">
-                            <button class="request-help-btn">Оставить заявку о помощи</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="map-container">
-                    <div class="map-filters">
-                        <h3>Категории помощи</h3>
-                        <div class="filter-options">
-                            <button class="filter-btn active">Все</button>
-                            <button class="filter-btn">Еда</button>
-                            <button class="filter-btn">Одежда</button>
-                            <button class="filter-btn">Лекарства</button>
-                            <button class="filter-btn">Другое</button>
-                        </div>
-                    </div>
-                    
-                    <div class="map-content">
-                        <div class="map-placeholder">
-                            <h2>Карта заявок</h2>
-                            <p>Здесь будет отображаться интерактивная карта с заявками о помощи</p>
-                            <p style="margin-top: 1rem; font-size: 0.9rem; color: #95a5a6;">(В реальном приложении здесь будет интеграция с картографическим сервисом)</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            
-            <!-- Секция "Фонды" -->
-            <section id="funds-section" class="page-section">
-                <div class="funds-title">
-                    <section class="hero">
-                        <h1>Благотворительные фонды</h1>
-                        <p>Поддержите проверенные благотворительные организации и помогите реализовать их важные проекты.</p>
-                    </section>
-                    
-                    <div class="controls">
-                        <button class="add-fund-btn">Добавить сбор фонда</button>
-                    </div>
-                </div>
+<div class="app">
+<!-- Шапка -->
+<header class="header">
+<div class="container">
+<div class="logo">Все вместе ♥</div>
+<nav class="nav">
+<button class="nav-btn active" data-page="map">Карта помощи</button>
+<button class="nav-btn" data-page="funds">Фонды</button>
+<button class="nav-btn" data-page="about">О проекте</button>
+</nav>
+</div>
+</header>
 
-                <div class="loading-spinner" id="loadingSpinner">
-                    <div class="spinner"></div>
-                    <p>Загрузка данных с сервера...</p>
-                </div>
-                
-                <div class="error-message" id="errorMessage">
-                    <h3>Не удалось загрузить данные</h3>
-                    <p>Текст ошибки</p>
-                </div>
-                
-                <div class="success-message" id="successMessage">
-                    <h3>Данные успешно загружены</h3>
-                    <p>Найдено <span id="fundsCount">0</span> благотворительных фондов.</p>
-                </div>
-                
-                <div class="funds-grid" id="fundsGrid">
-                    <!-- Карточки фондов появляются динамически -->
-                </div>
-            </section>
-            
-            <!-- Секция "О проекте" -->
-            <section id="about-section" class="page-section active">
-                <div class="about-content">
-                    
-                    <div class="how-it-works">
-                        <h1>О проекте "Все вместе"</h1>
-                    
-                        <p>Мы создали платформу, которая объединяет тех, кто нуждается в помощи, и тех, кто готов помочь. Наша миссия — сделать благотворительность простой, прозрачной и доступной каждому.</p>
+<!-- Основной контент -->
+<main class="main">
+<!-- Страница карты -->
+<section id="map-page" class="page active">
+<div class="container">
+<div class="map-controls">
+<button id="create-request-btn" class="btn-primary">➕ Создать заявку</button>
+<div class="filters">
+<select id="category-filter">
+<option value="">Все категории</option>
+<option value="food">🍎 Еда</option>
+<option value="clothes">👕 Одежда</option>
+<option value="medicine">💊 Лекарства</option>
+</select>
+<select id="urgency-filter">
+<option value="">Любая срочность</option>
+<option value="critical">📕 Очень срочно</option>
+<option value="high">📙 Срочно</option>
+</select>
+</div>
+</div>
+<div class="map-container">
+<div id="map" style="width: 100%; height: 500px;">
+<p>Карта загружается...</p>
+</div>
+</div>
+<div class="stats">
+<span id="requests-count">Заявок: 0</span>
+<button id="test-btn" class="btn-secondary">Тест кнопка</button>
+</div>
+</div>
+</section>
 
-                        <h2>Как это работает?</h2>
-                        
-                        <div class="steps">
-                            <div class="step">
-                                <div class="step-number">1</div>
-                                <h3>Оставьте заявку</h3>
-                                <p>Расскажите, в чем вы нуждаетесь или что можете предложить.</p>
-                            </div>
-                            
-                            <div class="step">
-                                <div class="step-number">2</div>
-                                <h3>Найдите на карте</h3>
-                                <p>Увидьте заявки людей рядом с вами.</p>
-                            </div>
-                            
-                            <div class="step">
-                                <div class="step-number">3</div>
-                                <h3>Помогите</h3>
-                                <p>Свяжитесь с человеком и окажите поддержку.</p>
-                            </div>
-                        </div>
+<!-- Страница фондов -->
+<section id="funds-page" class="page">
+<div class="container">
+<h1>Благотворительные фонды</h1>
+<button id="add-fund-btn" class="btn-primary">Добавить фонд</button>
+<div id="funds-list" class="funds-grid">
+<!-- Фонды появятся здесь -->
+</div>
+</div>
+</section>
 
-                    </div>    
-                    <div class="mission-statement">
-                        Вместе мы можем сделать мир лучше! <span class="logo">♥</span>
-                    </div>
-                </div>
-            </section>
-        </main>
-        
-        <footer>
-            <p>© 2025 Все вместе. Все права защищены.</p>
-        </footer>
-    </div>
+<!-- Страница о проекте -->
+<section id="about-page" class="page">
+<div class="container">
+<h1>О проекте</h1>
+<p>Платформа для взаимопомощи между людьми.</p>
+</div>
+</section>
+</main>
+</div>
+
+<!-- Модальное окно -->
+<div id="modal" class="modal" style="display: none;">
+<div class="modal-content">
+<h3 id="modal-title">Заголовок</h3>
+<div id="modal-body">Содержимое</div>
+<button id="modal-close" class="btn-secondary">Закрыть</button>
+</div>
+</div>
+
+<script src="app.js"></script>
 </body>
 </html>

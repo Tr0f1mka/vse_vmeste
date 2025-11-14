@@ -12,26 +12,44 @@ class CharityFund(models.Model):
     class Meta:
         verbose_name = "Благотворительный фонд"
         verbose_name_plural = "Благотворительные фонды"
-        ordering = ['-created_at']
     
     def __str__(self):
         return self.name
 
 class HelpRequest(models.Model):
     CATEGORY_CHOICES = [
-        ('food', 'Еда'),
-        ('clothes', 'Одежда'),
-        ('medicine', 'Лекарства'),
-        ('other', 'Другое'),
+        ('food', '🍎 Еда'),
+        ('clothes', '👕 Одежда'), 
+        ('medicine', '💊 Лекарства'),
+        ('household', '🏠 Хозтовары'),
+        ('other', '❔ Другое'),
     ]
     
-    title = models.CharField(max_length=200, verbose_name="Заголовок заявки")
+    URGENCY_CHOICES = [
+        ('low', '📗 Не срочно'),
+        ('medium', '📐 Средняя срочность'), 
+        ('high', '📙 Срочно'),
+        ('critical', '📕 Очень срочно'),
+    ]
+    
+    title = models.CharField(max_length=200, verbose_name="Заголовок")
     description = models.TextField(verbose_name="Описание потребности")
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, verbose_name="Категория")
-    location = models.CharField(max_length=200, verbose_name="Местоположение")
-    contact_info = models.CharField(max_length=200, verbose_name="Контактная информация")
-    is_urgent = models.BooleanField(default=False, verbose_name="Срочно")
-    is_active = models.BooleanField(default=True, verbose_name="Активная")
+    urgency = models.CharField(max_length=20, choices=URGENCY_CHOICES, default='medium', verbose_name="Срочность")
+    
+    # Геоданные
+    address = models.CharField(max_length=300, verbose_name="Адрес")
+    latitude = models.FloatField(verbose_name="Широта") 
+    longitude = models.FloatField(verbose_name="Долгота")
+    
+    # Контакты
+    contact_name = models.CharField(max_length=100, verbose_name="Имя контактного лица")
+    contact_phone = models.CharField(max_length=20, verbose_name="Телефон")
+    contact_email = models.EmailField(blank=True, verbose_name="Email")
+    
+    # Статус
+    is_active = models.BooleanField(default=True, verbose_name="Активная заявка")
+    is_fulfilled = models.BooleanField(default=False, verbose_name="Выполнена")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     
     class Meta:

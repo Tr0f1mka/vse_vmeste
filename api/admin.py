@@ -10,7 +10,8 @@ class CharityFundAdmin(admin.ModelAdmin):
 
 @admin.register(HelpRequest)
 class HelpRequestAdmin(admin.ModelAdmin):
-    list_display = ['title', 'category', 'location', 'is_urgent', 'is_active', 'created_at']
-    list_filter = ['category', 'is_urgent', 'is_active', 'created_at']
-    search_fields = ['title', 'description', 'location']
-    list_editable = ['is_urgent', 'is_active']
+    list_display = ['title', 'category', 'urgency', 'address', 'contact_name', 'is_active', 'is_fulfilled', 'created_at']
+    list_filter = ['category', 'urgency', 'is_active', 'is_fulfilled', 'created_at']
+    search_fields = ['title', 'description', 'address', 'contact_name']
+    list_editable = ['is_active', 'is_fulfilled']
+    readonly_fields = ['created_at']
